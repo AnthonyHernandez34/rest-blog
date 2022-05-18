@@ -1,51 +1,41 @@
 package com.example.restblog.data;
-
+import javax.management.relation.Role;
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 
 @Entity
 @Table(name = "users")
 public class User {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long Id;
+    private String username;
+    private String email;
+    private String password;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private Role role = Role.USER;
 
-    @NotEmpty
-    @Size(max = 255)
-    @Column(unique = true)
-    public String username;
-
-    public User(long id) {
-        this.id = id;
+    public User(Long id, String username, String email, String password, LocalDateTime createdAt, Role role) {
+        Id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.role = role;
     }
 
     public User() {
 
     }
 
-    public User(String password) {
-        this.password = password;
+    public Long getId() {
+        return Id;
     }
 
-    public User(Role role) {
-        this.role = role;
-    }
-
-    public User(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getUsername() {
@@ -72,11 +62,11 @@ public class User {
         this.password = password;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -86,31 +76,5 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    @NotEmpty
-    @Email
-    @Size(max = 255)
-    @Column(unique = true)
-    public String email;
-
-    @Column(nullable = false)
-    public String password;
-
-    @Column(nullable = false)
-    public Date createdAt;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    public Role role;
-
-
-    public enum Role {USER, ADMIN}
-
-    ;
-
-    @PrePersist
-    void createdAt() {
-        this.createdAt = new Date();
     }
 }
