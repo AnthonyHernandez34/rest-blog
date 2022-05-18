@@ -1,23 +1,32 @@
 export default function Login(props) {
     return `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8"/>
-    <title>Log In</title>
-</head>
-<body>
-<h1>Log In</h1>
-
-<form id="login-form">
-    <label for="username">Username</label>
-    <input id="username" name="username" type="text"/>
-    <label for="password">Password</label>
-    <input id="password" name="password" type="password"/>
-    <input id="login-btn" type="submit" value="Log In"/>
-</form>
-</body>
-</html>`;
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Log In</title>
+    </head>
+    <body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col col-md-6">
+                <div class="form-holder my-5">
+                    <h1 id="login-page-title">Log In</h1>
+                    <form>
+                        <label for="username">Username</label>
+                        <input class="form-control" id="username" name="username" type="text"/>
+                        <label for="password">Password</label>
+                        <input class="form-control" id="password" name="password" type="password"/>
+                        <div>
+                            <a href="/register" data-link>Not Registered?</a>
+                        </div>
+                        <p id="error-msg">Invalid Credentials</p>
+                        <input class="btn btn-light mt-3" id="login-btn" type="button" value="Log In"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>`;
 
 }
-
-
