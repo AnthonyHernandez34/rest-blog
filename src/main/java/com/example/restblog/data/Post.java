@@ -25,6 +25,20 @@ public class Post {
 
     }
 
+//    private User user;
+//
+//    public Post(User user) {
+//        this.user = user;
+//    }
+//
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
+
     public Date getDateCreated() {
         return dateCreated;
     }

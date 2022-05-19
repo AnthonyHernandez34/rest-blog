@@ -1,4 +1,5 @@
 import CreateView from "../createView.js"
+
 export default function Register() {
     // language=HTML
     return `
@@ -58,11 +59,12 @@ export default function Register() {
         </html>
     `;
 }
+
 export function RegisterEvent() {
     registerButtonListener();
 }
 
-export function registerButtonListener()  {
+export function registerButtonListener() {
     $("#register-btn").click(function () {
         let username = $("#username").val();
         let email = $("#email").val();
