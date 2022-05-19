@@ -1,24 +1,34 @@
 package com.example.restblog.data;
-import javax.management.relation.Role;
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
-
-@Entity
-@Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id;
+    private long id;
     private String username;
     private String email;
     private String password;
     private LocalDateTime createdAt = LocalDateTime.now();
     private Role role = Role.USER;
 
-    public User(Long id, String username, String email, String password, LocalDateTime createdAt, Role role) {
-        Id = id;
+    public enum Role {USER, ADMIN};
+
+    public User() {
+    }
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(long id, String username, String email, String password) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(long id, String username, String email, String password, LocalDateTime createdAt, Role role) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -26,16 +36,12 @@ public class User {
         this.role = role;
     }
 
-    public User() {
-
+    public long getId() {
+        return id;
     }
 
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long id) {
-        Id = id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -76,5 +82,17 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", createdAt=" + createdAt +
+                ", role=" + role +
+                '}';
     }
 }

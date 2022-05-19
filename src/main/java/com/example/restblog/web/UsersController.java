@@ -1,67 +1,61 @@
 package com.example.restblog.web;
-import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
-@Entity
+import com.example.restblog.data.User;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.example.restblog.data.User.Role.ADMIN;
+import static com.example.restblog.data.User.Role.USER;
+
+@CrossOrigin
+@RestController
+@RequestMapping(value = "/api/users", headers = "Accept=application/json")
 public class UsersController {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String title;
-    private String content;
-    private Date dateCreated;
 
-    public UsersController() {
+    List<User> users = new ArrayList<>();
+
+    @GetMapping
+    public List<User> getAll() {
+        users.add(new User("anthony", "ants.hernandez@gmail.com", "password1"));
+        users.add(new User("david", "david@gmail.com", "password2"));
+        users.add(new User("ben", "ben@gmail.com", "password3"));
+
+        return users;
     }
 
-    public UsersController(Long id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-
+    @GetMapping("{id}")
+    public User getUserById(@PathVariable Long id) {
+        for (User user : getAll()) {
+            if (Objects.equals(user.getId(), id)) {
+                return user;
+            }
+        }
+        return new User();
     }
 
-    public Date getDateCreated() {
-        return dateCreated;
+    @PostMapping
+    public void createUser(@RequestBody User userToAdd) {
+        System.out.println(userToAdd);
     }
 
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
+    @PutMapping("{id}")
+    public void updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+        for (User user : users) {
+            if (user.getId() == (id)) {
+                user.setUsername(updatedUser.getUsername());
+                user.setEmail(updatedUser.getEmail());
+                user.setPassword(updatedUser.getPassword());
+                user.setCreatedAt(updatedUser.getCreatedAt());
+                user.setRole(updatedUser.getRole());
+            }
+        }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                '}';
+    @DeleteMapping("{id}")
+    public void deleteUser(@PathVariable Long id) {
+        System.out.println("Deleting chosen id: " + id);
     }
 }
