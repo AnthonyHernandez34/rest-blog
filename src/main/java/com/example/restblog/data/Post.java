@@ -1,4 +1,5 @@
 package com.example.restblog.data;
+
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,20 +25,6 @@ public class Post {
         this.content = content;
 
     }
-
-//    private User user;
-//
-//    public Post(User user) {
-//        this.user = user;
-//    }
-//
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
 
     public Date getDateCreated() {
         return dateCreated;
