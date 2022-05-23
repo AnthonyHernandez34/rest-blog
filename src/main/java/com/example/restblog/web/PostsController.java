@@ -1,9 +1,10 @@
 package com.example.restblog.web;
-import com.example.restblog.services.PostServices;
+
 import com.example.restblog.data.Post;
-import io.swagger.v3.oas.annotations.Parameter;
+import com.example.restblog.service.PostService;
+import com.example.restblog.service.UserService;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -13,35 +14,29 @@ import java.util.Objects;
 @RequestMapping(value = "/api/posts", headers = "Accept=application/json")
 public class PostsController {
 
-    List<Post> posts = new ArrayList<>();
+    private final UserService userService;
+    private PostService postServices;
 
-    private PostServices postServices;
-
-    public PostsController(PostServices postServices) {
+    public PostsController(UserService userService,PostService postServices) {
+        this.userService = userService;
         this.postServices = postServices;
     }
 
     @GetMapping
     public List<Post> getAll() {
-        posts.add(new Post(1L, "Micheal", "Stuff1"));
-        posts.add(new Post(2L, "Ben", "Stuff2"));
-        posts.add(new Post(3L, "Dave", "Stuff3"));
-        return posts;
-    }
-
-    @GetMapping(value = "/")
-    public List<Post> posts() {
-        return postServices.getAllPosts();
+        return userService.getPostList();
     }
 
     @GetMapping("{id}")
     public Post getById(@PathVariable Long id) {
-        for (Post post : getAll()) {
+
+        // TODO: refactor this all out of here
+        for (Post post : userService.getPostList()) {
             if (Objects.equals(post.getId(), id)) {
                 return post;
             }
         }
-        return new Post();
+        return null;
     }
 
     @PostMapping(value = "/post")
@@ -50,17 +45,27 @@ public class PostsController {
             post.setDateCreated(new Date());
         postServices.insert(post);
     }
+    @PostMapping("{username}")
+    public void createByUsername(@PathVariable String username, @RequestBody Post newPost){
+        // Nice and clean, huh?
+        userService.addPost(newPost, username);
+    }
+
+
 
     @PutMapping("{id}")
-    public void updatePost(@Parameter Long id, @RequestBody Post post){
-        Post postToUpdate = new Post();
-        postToUpdate.setId(id);
-        postToUpdate.setTitle(post.getTitle());
-        postToUpdate.setContent(post.getContent());
-        System.out.println(post);
+    public void updatePost(@PathVariable Long id, @RequestBody Post updatedPost) {
+        for (Post post : userService.getPostList()){
+            if (post.getId().equals(id)){
+                post.setContent(updatedPost.getContent());
+                post.setTitle(updatedPost.getTitle());
+            }
+        }
     }
+
     @DeleteMapping("{id}")
-    public void deletePost(@PathVariable Long id){
-        System.out.println("remove post with: " + id);
+    public void deletePost(@PathVariable Long id) {
+        userService.deletePostById(id);
     }
+
 }

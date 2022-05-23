@@ -5,33 +5,39 @@ let requestMethod = "POST";
 let postId = "";
 
 export default function PostIndex(props) {
-    // language=HTML
+    //language=HTML
     return `
-        <header>
-            <h1>Posts Page</h1>
-        </header>
-        <main>
-            <div id="posts-container">
-                ${props.posts.map(post => `<h3 id="title-${post.id}">${post.title}</h3>
-                                            <p id="content-${post.id}">${post.content}</p>
-<button type="submit" class="btn btn-primary edit-button" data-id="${post.id}">Edit</button>
-<button type="submit" class="btn btn-danger delete-button" data-id="${post.id}">Delete</button>`).join('')}
-            </div>
-            <div id="add-post-form">
-                <div>
-                    <input type="text" class="form-control" id="add-post-title" placeholder="Add Post Title">
-                </div>
-                <br>
-                <div>
-                    <textarea class="form-control" rows="4" id="add-post-content"
-                              placeholder="Add Post Content"></textarea>
-                </div>
-                <br>
-                <div>
-                    <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
-                </div>
-            </div>
-        </main>
+      <header>
+        <h1>Posts Page</h1>
+      </header>
+      <main>
+        <div id="posts-container">
+          ${props.posts.map(post =>
+        
+        `<div class="post-container" id = "post-${post.id}">
+                  <h3 id="title-${post.id}">${post.title}</h3>
+                  <p id="content-${post.id}">${post.content}</p>
+                  <p class="post-author">${post.user.username}</p>
+                  <button type="submit" class="btn btn-primary edit-button" data-id="${post.id}">Edit</button>
+                  <button type="submit" class="btn btn-danger delete-button" data-id="${post.id}">Delete</button>
+              </div>
+            `).join('')}
+        </div>
+        <div id="add-post-form">
+          <div>
+            <input type="text" class="form-control" id="add-post-title" placeholder="Add Post Title">
+          </div>
+          <br>
+          <div>
+            <textarea class="form-control" rows="4" id="add-post-content"
+                placeholder="Add Post Content"></textarea>
+          </div>
+          <br>
+          <div>
+            <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+          </div>
+        </div>
+      </main>
     `;
 }
 
@@ -59,24 +65,23 @@ function createSubmitPostListener() {
 
         let requestUrl = "";
 
-        if (postId !== "") {
-            requestUrl = `${BASE_URL}/${postId}`;
+        // **** HERE ****
+        const fakeUsername = 'billybobboy';
+        if (fakeUsername) {
+            requestUrl = `${BASE_URL}/${fakeUsername}`; // **** MAKE SURE YOU HAVE AN @PostMapping which matches /api/posts/{username}
         } else {
             requestUrl = `${BASE_URL}`;
         }
 
         fetch(requestUrl, request)
-            .then(res => {
-                console.log(res.status);
-                // createView("/posts")
-            }).catch(error => {
-            console.log(error);
-            // createView("/posts");
-        }).finally(() => {
-            postId = "";
-            requestMethod = "POST";
-            createView("/posts")
-        })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                postId = "";
+                requestMethod = "POST";
+                createView("/posts")
+            })
 
     })
 }
@@ -85,13 +90,25 @@ function createEditPostListener() {
     $(document).on('click', '.edit-button', function (e) {
         e.preventDefault();
         postId = $(this).data("id");
-        requestMethod = "PUT";
 
         const postTitle = $(`#title-${postId}`).text();
         const postContent = $(`#content-${postId}`).text();
 
-        $("#add-post-title").val(postTitle);
-        $("#add-post-content").val(postContent);
+        const request = {
+            method: "PUT",
+            body: JSON.stringify({
+                id: postId,
+                title: postTitle,
+                postContent: postContent
+            })
+        };
+
+        fetch(`${BASE_URL}/${postId}`, request)
+            .then(res => {
+
+                return res.json();
+            })
+            .catch(err => console.log(err));
     })
 }
 
@@ -103,17 +120,16 @@ function createDeletePostListener() {
 
         const request = {
             method: "DELETE"
-        }
+        };
 
         fetch(`${BASE_URL}/${id}`, request)
             .then(res => {
                 console.log(res.status);
-                // createView("/posts")
-            }).catch(error => {
-            console.log(error);
-            // createView("/posts");
-        }).finally(() => {
-            createView("/posts")
-        })
+
+                $(`#post-${id}`).remove();
+            })
+            .catch(error => {
+                console.log(error);
+            });
     })
 }

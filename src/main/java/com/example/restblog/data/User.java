@@ -1,18 +1,35 @@
 package com.example.restblog.data;
-import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+
+// TODO: @Entity and @Table
+@Entity
+@Table(name="users")
 public class User {
-    private long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String username;
     private String email;
     private String password;
+
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
-    public enum Role {USER, ADMIN};
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user") // we want to ignore the post.user field to prevent a StackOverflowError
+    private List<Post> posts = new ArrayList<>();// 1 user has authored many posts - this is how we illustrate the relationship
 
-    public User() {
-    }
+    public enum Role {USER, ADMIN};
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -20,27 +37,21 @@ public class User {
         this.password = password;
     }
 
-    public User(long id, String username, String email, String password) {
+    public User(Long id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public User(long id, String username, String email, String password, LocalDateTime createdAt, Role role) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.role = role;
+    public User() {
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,6 +93,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     @Override

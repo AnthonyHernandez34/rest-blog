@@ -1,15 +1,15 @@
-package com.example.restblog.services;
+package com.example.restblog.service;
 import com.example.restblog.respository.PostRepositories;
 import com.example.restblog.data.Post;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PostServices {
+public class PostService {
 
     private PostRepositories postRepositories;
 
-    public PostServices(PostRepositories postRepositories) {
+    public PostService(PostRepositories postRepositories) {
         this.postRepositories = postRepositories;
     }
 
