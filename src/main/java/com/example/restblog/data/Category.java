@@ -49,7 +49,7 @@ public class Category {
             cascade = {CascadeType.DETACH, CascadeType.REFRESH},
             targetEntity = Post.class)
     @JoinTable(
-            name="post_category",
+            name="post_categories",
             joinColumns = {@JoinColumn(name = "category_id", nullable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name="post_id", nullable = false, updatable = false)},
             foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT),

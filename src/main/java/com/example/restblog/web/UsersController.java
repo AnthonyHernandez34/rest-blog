@@ -61,7 +61,4 @@ public class UsersController {
         userToUpdate.setPassword(newPassword);
         System.out.println(userToUpdate.getPassword());
     }
-
-
-
 }

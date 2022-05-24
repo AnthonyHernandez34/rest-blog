@@ -3,6 +3,7 @@ package com.example.restblog.data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Date;
 
 
@@ -18,7 +19,7 @@ public class Post {
     private Date dateCreated;
 
     @ManyToOne
-    @JsonIgnoreProperties("posts")// ignore the posts field on the User object to prevent extra data from being returned
+    @JsonIgnoreProperties({"posts","password"})// ignore the posts field on the User object to prevent extra data from being returned
     private User user; // each post has only 1 user who authored it
 
     public Post() {
@@ -72,6 +73,22 @@ public class Post {
     public void setUser(User user) {
         this.user = user;
     }
+
+
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.REFRESH},
+            targetEntity = Category.class)
+    @JoinTable(
+            name="post_categories",
+            joinColumns = {@JoinColumn(name = "post_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name="category_id", nullable = false, updatable = false)},
+            foreignKey = @ForeignKey(ConstraintMode.CONSTRAINT),
+            inverseForeignKey = @ForeignKey(ConstraintMode.CONSTRAINT)
+    )
+    @JsonIgnoreProperties("posts")
+    private Collection<Category> categories;
+
 
     @Override
     public String toString() {
