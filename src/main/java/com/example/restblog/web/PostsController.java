@@ -51,8 +51,6 @@ public class PostsController {
         userService.addPost(newPost, username);
     }
 
-
-
     @PutMapping("{id}")
     public void updatePost(@PathVariable Long id, @RequestBody Post updatedPost) {
         for (Post post : userService.getPostList()){
