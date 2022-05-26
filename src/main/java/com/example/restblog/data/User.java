@@ -1,6 +1,7 @@
 package com.example.restblog.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// TODO: @Entity and @Table
 @Entity
 @Table(name="users")
+@DynamicUpdate
 public class User {
 
     @Id
@@ -19,9 +20,9 @@ public class User {
     private String username;
     private String email;
     private String password;
-
+    // TODO: add a created_at column to the users table (see db_create and insert_test_records scripts)
     private LocalDateTime createdAt = LocalDateTime.now();
-
+    // TODO: add @Enumerated(EnumType.STRING) above role field to enforce that the enum value is a string, not an int
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 

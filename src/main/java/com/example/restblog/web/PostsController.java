@@ -1,7 +1,7 @@
 package com.example.restblog.web;
 
-import com.example.restblog.data.Category;
 import com.example.restblog.data.Post;
+import com.example.restblog.dto.CreatePostDto;
 import com.example.restblog.respository.CategoriesRepository;
 import com.example.restblog.respository.PostRepositories;
 import com.example.restblog.respository.UsersRepository;
@@ -10,12 +10,15 @@ import com.example.restblog.service.PostService;
 import com.example.restblog.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api/posts", headers = "Accept=application/json")
 public class PostsController {
+
 
     private final PostRepositories postRepository;
     private final UsersRepository userRepository;
@@ -34,8 +37,9 @@ public class PostsController {
     }
 
 
+
     @GetMapping
-    private List<Post> getAll() {
+    public List<Post> getAll() {
         return postRepository.findAll();
     }
 
@@ -43,6 +47,7 @@ public class PostsController {
     private Optional<Post> getById(@PathVariable Long id) {
         return postRepository.findById(id);
     }
+
 
     @PostMapping(value = "/post")
     public void createPost(@RequestBody Post post) {
@@ -52,10 +57,13 @@ public class PostsController {
     }
 
     @PostMapping("{username}")
-    public void createByUsername(@PathVariable String username, @RequestBody Post newPost) {
+    public void createByUsername(@PathVariable String username, @RequestBody CreatePostDto dto){
         // Nice and clean, huh?
+        Post newPost = new Post();
         userService.addPost(newPost, username);
         emailService.prepareAndSend(newPost, "sadasdasdasd","sadsadads");
+        postServices.addPost(dto, newPost,username);
+//        emailService.prepareAndSend(newPost, "New Post Created", "You've created a new post.");
     }
 
     @PutMapping("{id}")
@@ -68,8 +76,15 @@ public class PostsController {
         }
     }
 
+
     @DeleteMapping("{id}")
     public void deletePost(@PathVariable Long id) {
         userService.deletePostById(id);
     }
+
+    @GetMapping("search")
+    public List<Post> searchPosts(@RequestParam String keyword) {
+        return postServices.getPostsByTitleKeyword(keyword);
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.restblog.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name="posts")
+@DynamicUpdate
 public class Post {
 
     @Id
@@ -88,6 +90,14 @@ public class Post {
     )
     @JsonIgnoreProperties("posts")
     private Collection<Category> categories;
+
+    public Collection<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Collection<Category> categories) {
+        this.categories = categories;
+    }
 
 
     @Override

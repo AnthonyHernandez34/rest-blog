@@ -4,5 +4,5 @@ import com.example.restblog.data.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoriesRepository extends JpaRepository<Category, String> {
-    Category findCategoryByName(String name);
+    Category findCategoryByName(String category);
 }

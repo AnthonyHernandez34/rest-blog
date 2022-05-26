@@ -57,8 +57,14 @@ public class UsersController {
 
     @PutMapping("{id}/updatePassword")
     public void updatePassword(@PathVariable Long id, @RequestParam(required = false) String oldPassword, @Valid @Size(min = 3) @RequestParam String newPassword) {
+        // TODO: remove this code to the UserService in a public method which actually updates the password of a real user
         User userToUpdate = getById(id);
         userToUpdate.setPassword(newPassword);
         System.out.println(userToUpdate.getPassword());
     }
-}
+        @PatchMapping("{userId}")
+        public void updateEmail(@PathVariable Long userId, @RequestParam String newEmail){
+            userService.updateEmail(userId, newEmail);
+        }
+
+    }
